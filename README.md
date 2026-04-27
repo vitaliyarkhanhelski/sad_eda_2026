@@ -42,13 +42,12 @@ Modele uczenia maszynowego można wdrożyć w celu przewidywania potencjalnych p
 | `Attrition` | 150 | 10.2% |
 | `MonthlyIncome` | 150 | 10.2% |
 
-**🗑️ Kolumny stałe (do usunięcia):** `EmployeeCount`, `StandardHours`, `Over18`
+**🗑️ Kolumny stałe (do usunięcia):** `EmployeeCount`, `StandardHours`, `Over18`, `EmployeeNumber`
 
 ### 🔍 Zakres analizy
 
 **🧹 Czyszczenie danych:**
 - Usunięcie zbędnych kolumn
-- Zmiana nazw kolumn
 - Usuwanie duplikatów
 - Czyszczenie poszczególnych kolumn
 - Usuwanie wartości NaN
@@ -73,12 +72,12 @@ Modele uczenia maszynowego można wdrożyć w celu przewidywania potencjalnych p
 
 Projekt podzielony jest na 4 równoważne etapy — każdy członek zespołu odpowiada za jeden etap pipeline'u i samodzielnie implementuje przypisany plik. Etapy są sekwencyjne: każdy kolejny korzysta z wyniku poprzedniego.
 
-| Osoba                | Plik                          | Etap                              |
-|----------------------|-------------------------------|-----------------------------------|
-| Vitaliy Arkhanhelski | `src/data_preprocessing.py`   | Etap 1 — 🧹 Czyszczenie danych       |
-| Osoba 2              | `src/descriptive_analysis.py` | Etap 2 — 📈 Analiza opisowa          |
-| Osoba 3              | `src/correlation_analysis.py` | Etap 3 — 🔗 Korelacje i wizualizacje |
-| Osoba 4              | `src/data_preparation.py`     | Etap 4 — ⚙️ Przygotowanie do modelu  |
+| Osoba                | Plik                                               | Etap                              |
+|----------------------|----------------------------------------------------|-----------------------------------|
+| Vitaliy Arkhanhelski | [`src/stage1_preprocessing/data_preprocessing.py`](src/stage1_preprocessing/data_preprocessing.py)  | Etap 1 — 🧹 Czyszczenie danych       |
+| Osoba 2              | [`src/stage2_descriptive/descriptive_analysis.py`](src/stage2_descriptive/descriptive_analysis.py)  | Etap 2 — 📈 Analiza opisowa          |
+| Osoba 3              | [`src/stage3_correlation/correlation_analysis.py`](src/stage3_correlation/correlation_analysis.py)  | Etap 3 — 🔗 Korelacje i wizualizacje |
+| Osoba 4              | [`src/stage4_preparation/data_preparation.py`](src/stage4_preparation/data_preparation.py)          | Etap 4 — ⚙️ Przygotowanie do modelu  |
 
 ---
 
@@ -87,12 +86,12 @@ Projekt podzielony jest na 4 równoważne etapy — każdy członek zespołu odp
 **Dlaczego ten etap?** Surowy dataset HR.csv zawiera celowo wprowadzone braki (`Age`, `Attrition`, `MonthlyIncome`) oraz kolumny bezużyteczne dla analizy. Bez czyszczenia dalsze etapy dałyby błędne wyniki — każda analiza statystyczna i wizualizacja zależy od jakości danych wejściowych.
 
 **Zadania:**
-- Usunięcie kolumn stałych: `EmployeeCount`, `StandardHours`, `Over18`
-- Analiza wzorców braków danych (MCAR / MAR / MNAR)
-- Imputacja `Age` — medianą wg `JobLevel`
-- Imputacja `MonthlyIncome` — medianą wg `JobLevel` + `JobRole`
+- Usunięcie kolumn stałych: `EmployeeCount`, `StandardHours`, `Over18`, `EmployeeNumber`
+- Analiza wzorców braków danych (MCAR / MAR / MNAR) + heatmapa
+- Imputacja `Age` — medianą grupową wg `TotalWorkingYears + JobLevel + JobRole`
+- Imputacja `MonthlyIncome` — medianą grupową wg `JobLevel + JobRole + TotalWorkingYears`
 - `Attrition` — **nie imputować** (zmienna docelowa)
-- Wykrycie i obsługa wartości odstających metodą IQR
+- Wykrycie i wizualizacja wartości odstających metodą IQR (boxploty)
 - Usuwanie duplikatów
 - Zapis oczyszczonego datasetu → `HR_clean.csv`
 
@@ -169,16 +168,26 @@ sad_eda_2026/
 │   ├── HR_clean.csv                  # Generowany przez Etap 1 [Vitaliy Arkhanhelski]
 │   ├── HR_model_standardized.csv     # Generowany przez Etap 4
 │   └── HR_model_normalized.csv       # Generowany przez Etap 4
+├── charts/
+│   ├── stage1_preprocessing/         # Wykresy Etap 1
+│   ├── stage2_descriptive/           # Wykresy Etap 2
+│   ├── stage3_correlation/           # Wykresy Etap 3
+│   └── stage4_preparation/           # Wykresy Etap 4
 ├── reports/
-│   └── HR_profiling_report.html              # Automatyczny raport (ydata_profiling)
+│   └── HR_profiling_report.html      # Automatyczny raport (ydata_profiling)
 └── src/
     ├── settings.py                   # Ścieżki i konfiguracja projektu
     ├── main.py                       # Punkt wejścia — uruchamia cały pipeline
     ├── data_loader.py                # Wczytanie danych + raport profilujący
-    ├── data_preprocessing.py         # Etap 1 — czyszczenie danych [Vitaliy Arkhanhelski]
-    ├── descriptive_analysis.py       # Etap 2 — analiza opisowa
-    ├── correlation_analysis.py       # Etap 3 — korelacje i wizualizacje
-    └── data_preparation.py           # Etap 4 — przygotowanie do modelu
+    ├── stage1_preprocessing/         # Etap 1 — Vitaliy Arkhanhelski
+    │   ├── data_preprocessing.py
+    │   └── preprocessing_plots.py
+    ├── stage2_descriptive/           # Etap 2 — Osoba 2
+    │   └── descriptive_analysis.py
+    ├── stage3_correlation/           # Etap 3 — Osoba 3
+    │   └── correlation_analysis.py
+    └── stage4_preparation/           # Etap 4 — Osoba 4
+        └── data_preparation.py
 ```
 
 ## 🔄 Pipeline
@@ -196,8 +205,7 @@ load_data()
 
 ```bash
 pip install -r requirements.txt
-cd src
-python main.py
+python src/main.py
 ```
 
 Raport profilujący zostanie zapisany w `reports/HR_profiling_report.html`.

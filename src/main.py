@@ -6,10 +6,10 @@ Punkt wejścia projektu. Uruchamia kolejno wszystkie etapy analizy.
 """
 
 import src.data_loader as data_loader
-import src.data_preprocessing as data_preprocessing
-import src.descriptive_analysis as descriptive_analysis
-import src.correlation_analysis as correlation_analysis
-import src.data_preparation as data_preparation
+import src.stage1_preprocessing.data_preprocessing as data_preprocessing
+import src.stage2_descriptive.descriptive_analysis as descriptive_analysis
+import src.stage3_correlation.correlation_analysis as correlation_analysis
+import src.stage4_preparation.data_preparation as data_preparation
 
 
 def main():
