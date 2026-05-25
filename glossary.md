@@ -18,7 +18,7 @@ Braki **zależą od innych zmiennych** w datasecie (obserwowalnych), ale nie od 
 
 **Konsekwencja:** należy imputować **grupowo** — np. medianą wg `JobLevel + JobRole`. Globalna mediana byłaby błędem systematycznym.
 
-> ✅ `Age` i `MonthlyIncome` w HR.csv → **MAR** (potwierdzone analizą rozkładu JobLevel)
+> ✅ `Age` i `MonthlyIncome` w HR.csv → **MCAR** (potwierdzone testami Mann-Whitney U i Chi-kwadrat — brak istotnej zależności między brakami a innymi zmiennymi)
 
 ---
 
@@ -28,6 +28,42 @@ Braki **zależą od samej brakującej wartości** — dane "celowo" znikają z p
 **Przykład:** pracownicy z bardzo niskim wynagrodzeniem nie podają `MonthlyIncome` bo się wstydzą. Albo bardzo starzy pracownicy nie podają `Age`.
 
 **Konsekwencja:** najtrudniejszy przypadek — żadna prosta imputacja nie jest w pełni poprawna. Wymaga modelowania mechanizmu braków.
+
+---
+
+## Metody imputacji
+
+### KNN Imputer — K-Nearest Neighbors
+Metoda imputacji brakujących wartości oparta na K najbliższych sąsiadach. Dla każdego brakującego rekordu wyszukuje K najbardziej podobnych wierszy (wg odległości euklidesowej w przestrzeni cech) i wypełnia brak ich średnią ważoną.
+
+**Zalety nad medianą grupową:**
+- Uwzględnia wiele cech jednocześnie (nie tylko jedną grupę)
+- Zachowuje std i rozkład lepiej niż globalna mediana
+- Nie wymaga ręcznego definiowania grup
+
+**Pipeline w projekcie:**
+1. One-Hot Encoding zmiennych kategorycznych
+2. RobustScaler zmiennych numerycznych (odporny na outliery)
+3. Wybór K metodą łokcia (MSE na sztucznie usuniętych wartościach)
+4. Finalna imputacja KNNImputer z wybranym K
+
+> ✅ `Age` → K=6, `MonthlyIncome` → K=4 (wykresy: `charts/knn/`)
+
+---
+
+### Elbow Method — Metoda łokcia
+Technika wyboru optymalnego K dla KNN. Dla każdego K obliczamy MSE na zbiorze testowym (20% znanych wartości sztucznie usuniętych), a następnie wybieramy K w "zgięciu" krzywej — punkt gdzie dalsze zwiększanie K nie przynosi istotnej poprawy.
+
+---
+
+### MSE — Mean Squared Error (Błąd średniokwadratowy)
+Miara błędu imputacji — średnia kwadratów różnic między wartościami prawdziwymi a przewidywanymi.
+
+```
+MSE = (1/n) × Σ(y_true - y_pred)²
+```
+
+Im niższe MSE, tym lepsza imputacja. Używane w metodzie łokcia do wyboru K.
 
 ---
 
@@ -71,4 +107,42 @@ Miara **liniowej zależności** między dwiema zmiennymi numerycznymi.
 - r = -1.0 → idealna korelacja ujemna
 
 ⚠️ Nie działa dla zmiennych kategorycznych — dla nich używamy Cramer's V lub MI.
+
+---
+
+### Mann-Whitney U Test
+Nieparametryczny test statystyczny sprawdzający czy dwie grupy pochodzą z tego samego rozkładu. Używany do wykrywania wzorca **MAR** — czy rozkład zmiennej numerycznej (np. `Age`) różni się istotnie między grupą z brakami a bez braków.
+
+- p-value < 0.05 → istotna różnica → sugeruje MAR
+- p-value ≥ 0.05 → brak istotnej różnicy → sugeruje MCAR
+
+---
+
+### Test Chi-kwadrat
+Test statystyczny dla zmiennych kategorycznych. W kontekście analizy braków sprawdza czy częstość braków jest niezależna od wartości zmiennej kategorycznej (np. `JobLevel`).
+
+- p-value < 0.05 → zależność → sugeruje MAR
+- p-value ≥ 0.05 → niezależność → sugeruje MCAR
+
+---
+
+### Odchylenie standardowe (std)
+Pierwiastek kwadratowy z wariancji. Mówi jak bardzo wartości są rozproszone wokół średniej.
+
+```
+std = √( (1/n) × Σ(xᵢ - x̄)² )
+```
+
+Używane do oceny jakości imputacji — dobra imputacja nie powinna istotnie zmieniać std kolumny.
+
+---
+
+### Średnia arytmetyczna (mean)
+Suma wszystkich wartości podzielona przez ich liczbę.
+
+```
+mean = (x₁ + x₂ + ... + xₙ) / n
+```
+
+⚠️ Wrażliwa na outliery — przy skośnych rozkładach (jak `MonthlyIncome`) mediana jest lepszą miarą centrum.
 

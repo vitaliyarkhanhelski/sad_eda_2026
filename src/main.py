@@ -6,7 +6,8 @@ Punkt wejścia projektu. Uruchamia kolejno wszystkie etapy analizy.
 """
 
 import src.data_loader as data_loader
-import src.stage1_preprocessing.data_preprocessing as data_preprocessing
+import src.report as report
+import src.preprocessing as preprocessing
 import src.stage2_descriptive.descriptive_analysis as descriptive_analysis
 import src.stage3_correlation.correlation_analysis as correlation_analysis
 import src.stage4_preparation.data_preparation as data_preparation
@@ -17,18 +18,21 @@ def main():
     df = data_loader.load_data()
 
     # Krok 2: Automatyczny raport profilujący (ydata_profiling)
-    data_loader.generate_report(df)
+    report.generate_report(df)
 
-    # Krok 3: Czyszczenie danych [Vitaliy Arkhanhelski]
-    df = data_preprocessing.clean_data(df)
+    # Krok 3: Eksploracja datasetu — wykresy braków, statystyki, testy MAR/MCAR
+    preprocessing.dataset_analysis(df)
 
-    # Krok 4: Analiza opisowa i statystyczna [Osoba 2]
+    # Krok 4: Czyszczenie danych — duplikaty, imputacja KNN, outliery
+    df = preprocessing.clean_data(df)
+
+    # Krok 5: Analiza opisowa i statystyczna
     descriptive_analysis.run(df)
 
-    # Krok 5: Korelacje i wizualizacje [Osoba 3]
+    # Krok 6: Korelacje i wizualizacje
     correlation_analysis.run(df)
 
-    # Krok 6: Preprocessing pod model [Osoba 4]
+    # Krok 7: Preprocessing pod model
     data_preparation.run(df)
 
 
