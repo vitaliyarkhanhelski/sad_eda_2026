@@ -149,23 +149,20 @@ def _get_top_numeric_cols(df: pd.DataFrame) -> list[str]:
 
 def plot_histograms_by_attrition(df: pd.DataFrame, cols: list[str]) -> None:
     """Histogramy top N kolumn numerycznych (wg Mann-Whitney) z podziałem na Attrition."""
-
     cols_per_row = 5
     n_rows = 3
     fig, axes = plt.subplots(n_rows, cols_per_row, figsize=(25, 5 * n_rows))
     axes = axes.flatten()
 
-    colors = {'Yes': '#e05c5c', 'No': '#4c8cbf'}
+    palette = {'Yes': '#e05c5c', 'No': '#4c8cbf'}
 
     for i, col in enumerate(cols):
-        for attrition_val, color in colors.items():
-            subset = df[df['Attrition'] == 'Yes'][col].dropna()
-            axes[i].hist(subset, bins=25, alpha=0.6, color=color,
-                         label=f'Attrition={attrition_val}', density=True)
+        sns.histplot(data=df, x=col, hue='Attrition', hue_order=['No', 'Yes'],
+                     palette=palette, bins=25, stat='density',
+                     alpha=0.5, element='step', common_norm=False, ax=axes[i])
         axes[i].set_title(col)
         axes[i].set_xlabel(col)
         axes[i].set_ylabel('Gęstość')
-        axes[i].legend(fontsize=8)
 
     for j in range(len(cols), len(axes)):
         axes[j].set_visible(False)
