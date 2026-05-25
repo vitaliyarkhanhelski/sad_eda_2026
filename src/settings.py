@@ -10,12 +10,14 @@ except NameError:
 
 DATA_DIR = PROJECT_ROOT / "data"
 DATA_STAGE1_DIR = DATA_DIR / "stage1_preprocessing"
+DATA_STAGE2_DIR = DATA_DIR / "stage2_descriptive"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 CHARTS_DIR = PROJECT_ROOT / "charts"
 CHARTS_MSNO_DIR = CHARTS_DIR / "msno"
 CHARTS_AGE_DIR = CHARTS_DIR / "age"
 CHARTS_MONTHLY_INCOME_DIR = CHARTS_DIR / "monthly_income"
 CHARTS_KNN_DIR = CHARTS_DIR / "knn"
+CHARTS_STAGE2_DIR = CHARTS_DIR / "stage2_descriptive"
 DATASET_FILENAME = "HR.csv"
 REPORT_FILENAME = "HR_profiling_report.html"
 

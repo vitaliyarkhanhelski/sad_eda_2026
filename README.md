@@ -132,13 +132,32 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 **Dlaczego ten etap?** Po oczyszczeniu danych należy zrozumieć ich rozkłady i sprawdzić, które zmienne statystycznie różnią się między pracownikami, którzy odeszli, a tymi, którzy pozostali. Testy statystyczne dają obiektywne podstawy do wyboru zmiennych do modelu.
 
 **Zadania:**
-- Statystyki opisowe zmiennych numerycznych: średnia, mediana, odchylenie standardowe, skośność, kurtoza, współczynnik zmienności CV
-- Histogramy i boxploty z podziałem na `Attrition = Yes / No`
-- Analiza zmiennej docelowej `Attrition` — rozkład klas (niezbalansowanie)
-- Testy statystyczne:
+- Analiza zmiennej docelowej `Attrition` — rozkład klas: **Yes=214 (16.2%), No=1106 (83.8%)**
+- Statystyki opisowe zmiennych numerycznych: mean, median, std, skewness, kurtosis, CV
+- Histogramy i violin ploty z podziałem na `Attrition = Yes / No`
+  - Kolumny wybrane automatycznie wg testu Manna-Whitneya (p < 0.05) — bez hardcodu
+- Testy statystyczne (tylko wiersze z wypełnionym Attrition — 1320/1470):
   - zmienne numeryczne vs `Attrition` → **test Manna-Whitneya** (nieparametryczny)
   - zmienne kategoryczne vs `Attrition` → **test Chi-kwadrat**
-- Wizualizacja wyników testów — ranking istotności zmiennych
+- Ranking istotności — **21/30 zmiennych istotnych** (p < 0.05)
+- Najsilniejszy związek: `OverTime`, `MonthlyIncome`, `JobRole`, `MaritalStatus`, `Age`
+- Brak związku: `HourlyRate`, `MonthlyRate`, `PerformanceRating`, `Gender`
+
+| Rozkład Attrition | Ranking istotności zmiennych |
+|---|---|
+| ![attrition](charts/stage2_descriptive/attrition_distribution.png) | ![ranking](charts/stage2_descriptive/statistical_tests_ranking.png) |
+
+**Histogramy — top 15 zmiennych numerycznych (p < 0.05) wg Attrition:**
+
+![histograms](charts/stage2_descriptive/histograms_by_attrition.png)
+
+**Violin ploty — rozkład i mediany wg Attrition:**
+
+![violins](charts/stage2_descriptive/violinplots_by_attrition.png)
+
+**Artefakty w `data/stage2_descriptive/`:**
+- `descriptive_stats.csv` — statystyki opisowe wszystkich zmiennych numerycznych (mean, std, skewness, kurtosis, CV)
+- `statistical_tests.csv` — p-value dla każdej zmiennej vs Attrition (Mann-Whitney U + Chi-kwadrat)
 
 📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
 📤 **Wyjście:** wykresy + podsumowanie wyników testów
@@ -196,12 +215,15 @@ sad_eda_2026/
 │   ├── HR_clean.csv                  # Generowany przez Etap 1 → data/HR_clean.csv
 │   ├── HR_model_standardized.csv     # Generowany przez Etap 4
 │   ├── HR_model_normalized.csv       # Generowany przez Etap 4
-│   └── stage1_preprocessing/         # Artefakty Etapu 1
-│       ├── age_imputed_rows.csv
-│       ├── age_imputation_stats.csv
-│       ├── monthlyincome_imputed_rows.csv
-│       ├── monthlyincome_imputation_stats.csv
-│       └── outliers_summary.csv
+│   ├── stage1_preprocessing/         # Artefakty Etapu 1
+│   │   ├── age_imputed_rows.csv
+│   │   ├── age_imputation_stats.csv
+│   │   ├── monthlyincome_imputed_rows.csv
+│   │   ├── monthlyincome_imputation_stats.csv
+│   │   └── outliers_summary.csv
+│   └── stage2_descriptive/           # Artefakty Etapu 2
+│       ├── descriptive_stats.csv
+│       └── statistical_tests.csv
 ├── charts/
 │   ├── msno/                         # Wykresy braków (missingno)
 │   ├── age/                          # Analiza imputacji Age
@@ -211,6 +233,10 @@ sad_eda_2026/
 │   │   └── monthly_income_knn_elbow.png
 │   ├── outliers_boxplots.png         # Boxploty top 6 kolumn z outlierami
 │   ├── stage2_descriptive/           # Wykresy Etap 2
+│   │   ├── attrition_distribution.png
+│   │   ├── histograms_by_attrition.png
+│   │   ├── violinplots_by_attrition.png
+│   │   └── statistical_tests_ranking.png
 │   ├── stage3_correlation/           # Wykresy Etap 3
 │   └── stage4_preparation/           # Wykresy Etap 4
 ├── reports/
@@ -257,18 +283,7 @@ python src/main.py
 
 Raport profilujący zostanie zapisany w `reports/HR_profiling_report.html`.
 
-## 🏆 Kryteria oceny (wg prowadzącego)
-
-| Kryterium | Punkty |
-|---|---|
-| 🤝 Praca zespołowa (git, branche, PR) | 0–2 |
-| ✍️ Estetyka, Markdown, komentarze, wnioski | 0–3 |
-| 🧹 Porządkowanie i czyszczenie danych | 0–3 |
-| 📊 Wizualizacja danych | 0–4 |
-| 📈 Analiza opisowa | 0–4 |
-| 🔬 Wnioskowanie statystyczne | 0–4 |
-| **🎯 Razem** | **0–20** |
 
 ## 📜 Licencja
 
-CC BY-SA 4.0 — [Karol Flisikowski](https://statosfera.pl/)
+CC BY-SA 4.0 — [Karol Flisikowski](https://github.com/kflisikowsky/analiza_danych_projekt_zespolowy)

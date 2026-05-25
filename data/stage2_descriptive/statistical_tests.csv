@@ -1,0 +1,31 @@
+kolumna,test,p_value,istotne
+Age,Mann-Whitney U,0.0,True
+JobRole,Chi-kwadrat,0.0,True
+YearsWithCurrManager,Mann-Whitney U,0.0,True
+YearsInCurrentRole,Mann-Whitney U,0.0,True
+YearsAtCompany,Mann-Whitney U,0.0,True
+TotalWorkingYears,Mann-Whitney U,0.0,True
+StockOptionLevel,Mann-Whitney U,0.0,True
+MaritalStatus,Chi-kwadrat,0.0,True
+MonthlyIncome,Mann-Whitney U,0.0,True
+OverTime,Chi-kwadrat,0.0,True
+JobLevel,Mann-Whitney U,0.0,True
+BusinessTravel,Chi-kwadrat,9e-06,True
+JobInvolvement,Mann-Whitney U,1.2e-05,True
+JobSatisfaction,Mann-Whitney U,8e-05,True
+DistanceFromHome,Mann-Whitney U,0.000132,True
+EducationField,Chi-kwadrat,0.003117,True
+EnvironmentSatisfaction,Mann-Whitney U,0.003199,True
+Department,Chi-kwadrat,0.012342,True
+WorkLifeBalance,Mann-Whitney U,0.030051,True
+DailyRate,Mann-Whitney U,0.037483,True
+YearsSinceLastPromotion,Mann-Whitney U,0.044844,True
+TrainingTimesLastYear,Mann-Whitney U,0.063523,False
+RelationshipSatisfaction,Mann-Whitney U,0.189121,False
+NumCompaniesWorked,Mann-Whitney U,0.224292,False
+Education,Mann-Whitney U,0.266047,False
+Gender,Chi-kwadrat,0.290083,False
+PercentSalaryHike,Mann-Whitney U,0.329305,False
+PerformanceRating,Mann-Whitney U,0.59245,False
+HourlyRate,Mann-Whitney U,0.794334,False
+MonthlyRate,Mann-Whitney U,0.847903,False
