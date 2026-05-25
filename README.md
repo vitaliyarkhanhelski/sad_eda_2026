@@ -85,6 +85,10 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 - Statystyki opisowe datasetu (`skimpy`)
 - Analiza mechanizmu braków: testy Mann-Whitney U i Chi-kwadrat → **MCAR**
 
+| Macierz braków | Heatmapa braków | Dendrogram |
+|---|---|---|
+| ![msno matrix](charts/msno/msno_matrix.png) | ![msno heatmap](charts/msno/msno_heatmap.png) | ![msno dendrogram](charts/msno/msno_dendrogram.png) |
+
 **Czyszczenie (`clean_data`):**
 - Usunięcie duplikatów
 - Usunięcie kolumn stałych: `EmployeeCount`, `StandardHours`, `Over18`, `EmployeeNumber`
@@ -92,7 +96,24 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 - Imputacja `MonthlyIncome` — **KNN Imputer** (K=4, wybór metodą łokcia MSE)
 - `Attrition` — **nie imputować** (zmienna docelowa)
 - Wykrycie wartości odstających metodą IQR — tabela + boxploty top 6 kolumn ciągłych
-- Zapis oczyszczonego datasetu → `HR_clean.csv`
+- Zapis oczyszczonego datasetu → [`HR_clean.csv`](data/HR_clean.csv)
+
+**Wybór cech do KNN — korelacje i Mutual Information:**
+
+| Age | MonthlyIncome |
+|---|---|
+| ![age correlations](charts/age/imputation_correlations.png) | ![monthlyincome correlations](charts/monthly_income/imputation_correlations.png) |
+| ![age MI](charts/age/mutual_information.png) | ![monthlyincome MI](charts/monthly_income/mutual_information.png) |
+
+**Wybór K metodą łokcia (MSE):**
+
+| Age (K=6) | MonthlyIncome (K=4) |
+|---|---|
+| ![age elbow](charts/knn/age_knn_elbow.png) | ![monthlyincome elbow](charts/knn/monthly_income_knn_elbow.png) |
+
+**Analiza wartości odstających (IQR):**
+
+![outliers boxplots](charts/outliers_boxplots.png)
 
 **Artefakty w `data/stage1_preprocessing/`:**
 - `age_imputed_rows.csv` — 100 wierszy z wartościami wstawionymi przez KNN
@@ -119,7 +140,7 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
   - zmienne kategoryczne vs `Attrition` → **test Chi-kwadrat**
 - Wizualizacja wyników testów — ranking istotności zmiennych
 
-📥 **Wejście:** `HR_clean.csv` / oczyszczony `df`  
+📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
 📤 **Wyjście:** wykresy + podsumowanie wyników testów
 
 ---
@@ -137,7 +158,7 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 - Attrition rate wg grup: `Department`, `JobRole`, `MaritalStatus`, `OverTime`, `BusinessTravel`, `Gender`, `EducationField`
 - Wykresy: nadgodziny, stan cywilny, podróż służbowa, odległość od domu, łączne lata pracy, liczba firm
 
-📥 **Wejście:** `HR_clean.csv` / oczyszczony `df`  
+📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
 📤 **Wyjście:** interaktywne wykresy (Plotly)
 
 ---
@@ -158,7 +179,7 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 - Krótkie podsumowanie: które zmienne warto uwzględnić w modelu
 - Zapis finalnych datasetów → `HR_model_standardized.csv`, `HR_model_normalized.csv`
 
-📥 **Wejście:** `HR_clean.csv` / oczyszczony `df`  
+📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
 📤 **Wyjście:** dwa pliki CSV gotowe do modelowania
 
 ## 📁 Struktura projektu
@@ -172,7 +193,7 @@ sad_eda_2026/
 │   └── banner.jpg
 ├── data/
 │   ├── HR.csv                        # Surowy dataset
-│   ├── HR_clean.csv                  # Generowany przez Etap 1
+│   ├── HR_clean.csv                  # Generowany przez Etap 1 → data/HR_clean.csv
 │   ├── HR_model_standardized.csv     # Generowany przez Etap 4
 │   ├── HR_model_normalized.csv       # Generowany przez Etap 4
 │   └── stage1_preprocessing/         # Artefakty Etapu 1
