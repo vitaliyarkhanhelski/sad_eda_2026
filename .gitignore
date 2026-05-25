@@ -22,8 +22,10 @@ ENV/
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
+# Generated reports (too large for git)
+reports/
+
 # Data files
-*.csv
 *.xlsx
 *.xls
 *.parquet
@@ -42,5 +44,3 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
-
-test.py
