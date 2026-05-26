@@ -170,15 +170,32 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 
 **Zadania:**
 - Macierz korelacji Spearmana dla zmiennych numerycznych — heatmapa
-- Top 10 zmiennych najbardziej skorelowanych z `Attrition`
-- Cramer's V — macierz asocjacji zmiennych kategorycznych
-- Scatter matrix dla kluczowych zmiennych z kolorowaniem wg `Attrition`
-- Parallel Coordinates — profile pracowników odchodzących vs pozostających
-- Attrition rate wg grup: `Department`, `JobRole`, `MaritalStatus`, `OverTime`, `BusinessTravel`, `Gender`, `EducationField`
-- Wykresy: nadgodziny, stan cywilny, podróż służbowa, odległość od domu, łączne lata pracy, liczba firm
+- Top 10 zmiennych najbardziej skorelowanych z `Attrition` → `top_correlations.csv`
+- Cramer's V — macierz asocjacji zmiennych kategorycznych (tylko `object` kolumny)
+- Attrition rate wg top 6 grup kategorycznych (wybór data-driven wg Cramer's V): `JobRole`, `OverTime`, `MaritalStatus`, `BusinessTravel`, `EducationField`, `Department`
+- Parallel Coordinates — znormalizowane profile pracowników odchodzących vs pozostających (top 6 zmiennych wg Spearmana)
+
+**Macierz korelacji Spearmana:**
+
+![spearman heatmap](charts/stage3_correlation/spearman_heatmap.png)
+
+**Cramer's V — siła związku między zmiennymi kategorycznymi:**
+
+![cramers v](charts/stage3_correlation/cramers_v_heatmap.png)
+
+**Attrition rate wg grup (top 6 wg Cramer's V z Attrition):**
+
+![attrition rate](charts/stage3_correlation/attrition_rate_by_groups.png)
+
+**Parallel Coordinates — profile pracowników:**
+
+![parallel coordinates](charts/stage3_correlation/parallel_coordinates.png)
+
+**Artefakty w `data/stage3_correlation/`:**
+- `top_correlations.csv` — top 10 zmiennych numerycznych najsilniej skorelowanych z Attrition (Spearman)
 
 📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
-📤 **Wyjście:** interaktywne wykresy (Plotly)
+📤 **Wyjście:** wykresy PNG + CSV z top korelacjami
 
 ---
 
@@ -221,9 +238,11 @@ sad_eda_2026/
 │   │   ├── monthlyincome_imputed_rows.csv
 │   │   ├── monthlyincome_imputation_stats.csv
 │   │   └── outliers_summary.csv
-│   └── stage2_descriptive/           # Artefakty Etapu 2
-│       ├── descriptive_stats.csv
-│       └── statistical_tests.csv
+│   ├── stage2_descriptive/           # Artefakty Etapu 2
+│   │   ├── descriptive_stats.csv
+│   │   └── statistical_tests.csv
+│   └── stage3_correlation/           # Artefakty Etapu 3
+│       └── top_correlations.csv
 ├── charts/
 │   ├── msno/                         # Wykresy braków (missingno)
 │   ├── age/                          # Analiza imputacji Age
@@ -238,6 +257,10 @@ sad_eda_2026/
 │   │   ├── violinplots_by_attrition.png
 │   │   └── statistical_tests_ranking.png
 │   ├── stage3_correlation/           # Wykresy Etap 3
+│   │   ├── spearman_heatmap.png
+│   │   ├── cramers_v_heatmap.png
+│   │   ├── attrition_rate_by_groups.png
+│   │   └── parallel_coordinates.png
 │   └── stage4_preparation/           # Wykresy Etap 4
 ├── reports/
 │   └── HR_profiling_report.html      # Automatyczny raport (ydata_profiling)
