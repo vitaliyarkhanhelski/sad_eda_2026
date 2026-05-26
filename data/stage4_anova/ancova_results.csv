@@ -1,0 +1,13 @@
+zmienna_num,zmienna_kat,covariate,p_categorical,p_covariate,kat_istotny,cov_istotny
+MonthlyIncome,JobRole,Age,0.0,0.0,True,True
+TotalWorkingYears,JobRole,Age,0.0,0.0,True,True
+JobLevel,JobRole,Age,0.0,0.0,True,True
+JobLevel,Department,Age,0.0,0.0,True,True
+MonthlyIncome,Department,Age,0.0012,0.0,True,True
+JobLevel,MaritalStatus,Age,0.2305,0.0,False,True
+MonthlyIncome,MaritalStatus,Age,0.311,0.0,False,True
+TotalWorkingYears,Department,Age,0.4489,0.0,False,True
+TotalWorkingYears,MaritalStatus,Age,0.4837,0.0,False,True
+JobLevel,OverTime,Age,0.5304,0.0,False,True
+TotalWorkingYears,OverTime,Age,0.598,0.0,False,True
+MonthlyIncome,OverTime,Age,0.6637,0.0,False,True

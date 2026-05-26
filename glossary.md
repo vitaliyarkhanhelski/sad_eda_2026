@@ -137,6 +137,64 @@ Używane do oceny jakości imputacji — dobra imputacja nie powinna istotnie zm
 
 ---
 
+### Spearman — Korelacja rang Spearmana
+Nieparametryczna miara monotonicznej zależności między dwiema zmiennymi numerycznymi. Działa na rangach wartości, nie na wartościach bezpośrednich — odporniejsza na outliery niż Pearson.
+
+- r = 1.0 → idealna korelacja dodatnia (monotoniczna)
+- r = 0.0 → brak korelacji
+- r = -1.0 → idealna korelacja ujemna
+
+Preferowana gdy dane nie są normalnie rozłożone (np. `MonthlyIncome` z silną skośnością).
+
+> ✅ Użyto w Stage 3 do macierzy korelacji zmiennych numerycznych
+
+---
+
+### Cramer's V
+Miara siły związku między dwiema zmiennymi **kategorycznymi**. Zakres 0–1 (brak kierunku — kategorie nie mają kolejności).
+
+```
+V = sqrt(chi2 / (n × k))
+```
+
+gdzie k = min(liczba_kategorii_A, liczba_kategorii_B) - 1
+
+- V = 0 → brak związku
+- V = 1 → pełny związek
+
+> ✅ Użyto w Stage 3 do macierzy asocjacji zmiennych kategorycznych
+
+---
+
+### ANOVA — Analysis of Variance (Analiza Wariancji)
+Test statystyczny sprawdzający czy średnia zmiennej numerycznej różni się istotnie między 3 lub więcej grupami zmiennej kategorycznej.
+
+```
+F = wariancja między grupami / wariancja wewnątrz grup
+```
+
+- F duże, p < 0.05 → grupy mają istotnie różne średnie → efekt nieprzypadkowy
+- F małe, p > 0.05 → brak istotnych różnic → grupy podobne
+
+**Przykład:** czy `MonthlyIncome` różni się między `JobRole` (9 ról)?  
+→ F=682, p≈0 → tak, różnice są istotne i nieprzypadkowe.
+
+> ✅ Użyto w Stage 4 dla 16 par (4 numeryczne × 4 kategoryczne)
+
+---
+
+### ANCOVA — Analysis of Covariance (Analiza Kowariancji)
+Rozszerzenie ANOVA o kontrolę covariatu (zmiennej zakłócającej). Odpowiada na pytanie: czy efekt grupowy pozostaje po uwzględnieniu dodatkowej zmiennej (np. Age)?
+
+**Przykład:** czy `JobLevel` różni się między `MaritalStatus` po kontroli Age?  
+→ ANOVA: p=0.007 (tak) → ANCOVA: p=0.231 (nie) → różnica wynikała tylko z różnic wiekowych.
+
+**Wniosek praktyczny:** ANCOVA pozwala oddzielić "prawdziwy" efekt grupy od efektu covariatu — przydatne przy selekcji cech do modelu.
+
+> ✅ Użyto w Stage 4 dla 12 par (covariate=Age)
+
+---
+
 ### Średnia arytmetyczna (mean)
 Suma wszystkich wartości podzielona przez ich liczbę.
 

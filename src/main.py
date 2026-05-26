@@ -10,7 +10,8 @@ import src.report as report
 import src.preprocessing as preprocessing
 import src.stage2_descriptive.descriptive_analysis as descriptive_analysis
 import src.stage3_correlation.correlation_analysis as correlation_analysis
-import src.stage4_preparation.data_preparation as data_preparation
+import src.stage4_anova.anova_analysis as anova_analysis
+import src.stage5_preparation.data_preparation as data_preparation
 
 
 def main():
@@ -32,7 +33,10 @@ def main():
     # Krok 6: Korelacje i wizualizacje
     correlation_analysis.run(df)
 
-    # Krok 7: Preprocessing pod model
+    # Krok 7: ANOVA i ANCOVA
+    anova_analysis.run(df)
+
+    # Krok 8: Preprocessing pod model
     data_preparation.run(df)
 
 

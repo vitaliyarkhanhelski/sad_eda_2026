@@ -1,0 +1,17 @@
+zmienna_num,zmienna_kat,F,p_value,istotny
+MonthlyIncome,JobRole,682.964,0.0,True
+JobLevel,JobRole,511.21,0.0,True
+TotalWorkingYears,JobRole,128.079,1.6014373494789063e-158,True
+Age,JobRole,39.984,2.559557091918207e-57,True
+JobLevel,Department,10.685,2.4930695843123736e-05,True
+Age,MaritalStatus,7.269,0.0007250559248547912,True
+JobLevel,MaritalStatus,5.01,0.0067956942437021085,True
+TotalWorkingYears,MaritalStatus,4.794,0.008422941828440639,True
+MonthlyIncome,MaritalStatus,4.372,0.012808939924605725,True
+MonthlyIncome,Department,4.043,0.017758331681474532,True
+Age,OverTime,1.841,0.17503207680937474,False
+Age,Department,0.698,0.4975790600883332,False
+TotalWorkingYears,OverTime,0.305,0.5808062950552066,False
+MonthlyIncome,OverTime,0.095,0.7574029818965686,False
+JobLevel,OverTime,0.023,0.8800047594037267,False
+TotalWorkingYears,Department,0.008,0.991749639727599,False

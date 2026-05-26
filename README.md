@@ -199,7 +199,38 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 
 ---
 
-### ⚙️ Etap 4 — Przygotowanie danych do modelowania [`src/stage4_preparation/data_preparation.py`]
+### 📐 Etap 4 — ANOVA i ANCOVA [`src/stage4_anova/anova_analysis.py`]
+
+**Dlaczego ten etap?** Korelacje pokazują związek między zmiennymi, ale nie mówią czy różnice między grupami są statystycznie istotne po kontroli innych czynników. ANOVA testuje czy średnie różnią się między 3+ grupami, a ANCOVA sprawdza czy efekt grupowy pozostaje po uwzględnieniu covariatu (Age).
+
+**Zadania:**
+- **One-way ANOVA**: 16 par (4 numeryczne × 4 kategoryczne) — wyniki w `anova_results.csv`
+- **ANCOVA**: kontrola covariatu `Age` dla 12 par — wyniki w `ancova_results.csv`
+- Boxploty top 6 istotnych par (wg p-value)
+
+**Zmienne:**
+- Numeryczne (dependent): `MonthlyIncome`, `TotalWorkingYears`, `Age`, `JobLevel`
+- Kategoryczne (grouping): `JobRole`, `Department`, `MaritalStatus`, `OverTime`
+- Covariate: `Age`
+
+**Boxploty istotnych różnic między grupami (top 6 par wg p-value):**
+
+![anova boxplots](charts/stage4_anova/anova_boxplots.png)
+
+**Kluczowe wnioski z ANCOVA:**
+- `JobRole` i `Department` → zachowują istotność po kontroli Age → efekt niezależny od wieku
+- `MaritalStatus`, `OverTime` → tracą istotność po kontroli Age → różnice wynikały z różnic wiekowych
+
+**Artefakty w `data/stage4_anova/`:**
+- [`anova_results.csv`](data/stage4_anova/anova_results.csv) — F-statystyka i p-value dla 16 par (ANOVA)
+- [`ancova_results.csv`](data/stage4_anova/ancova_results.csv) — p-value dla efektu kategorycznego i covariatu (ANCOVA)
+
+📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
+📤 **Wyjście:** CSV z wynikami + wykresy boxplot
+
+---
+
+### ⚙️ Etap 5 — Przygotowanie danych do modelowania [`src/stage5_preparation/data_preparation.py`]
 
 **Dlaczego ten etap?** Modele uczenia maszynowego wymagają danych w formacie numerycznym i odpowiednio przeskalowanych. Ten etap zamyka cały pipeline EDA i produkuje gotowe datasety, które w przyszłości trafią bezpośrednio do treningu modelu klasyfikacyjnego.
 
@@ -216,7 +247,7 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 - Zapis finalnych datasetów → `HR_model_standardized.csv`, `HR_model_normalized.csv`
 
 📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
-📤 **Wyjście:** dwa pliki CSV gotowe do modelowania
+📤 **Wyjście:** dwa pliki CSV gotowe do modelowania (`HR_model_standardized.csv`, `HR_model_normalized.csv`)
 
 ## 📁 Struktura projektu
 
@@ -241,8 +272,11 @@ sad_eda_2026/
 │   ├── stage2_descriptive/           # Artefakty Etapu 2
 │   │   ├── descriptive_stats.csv
 │   │   └── statistical_tests.csv
-│   └── stage3_correlation/           # Artefakty Etapu 3
-│       └── top_correlations.csv
+│   ├── stage3_correlation/           # Artefakty Etapu 3
+│   │   └── top_correlations.csv
+│   └── stage4_anova/                 # Artefakty Etapu 4
+│       ├── anova_results.csv
+│       └── ancova_results.csv
 ├── charts/
 │   ├── msno/                         # Wykresy braków (missingno)
 │   ├── age/                          # Analiza imputacji Age
@@ -261,7 +295,9 @@ sad_eda_2026/
 │   │   ├── cramers_v_heatmap.png
 │   │   ├── attrition_rate_by_groups.png
 │   │   └── parallel_coordinates.png
-│   └── stage4_preparation/           # Wykresy Etap 4
+│   ├── stage4_anova/                 # Wykresy Etap 4
+│   │   └── anova_boxplots.png
+│   └── stage5_preparation/           # Wykresy Etap 5
 ├── reports/
 │   └── HR_profiling_report.html      # Automatyczny raport (ydata_profiling)
 └── src/
@@ -273,9 +309,11 @@ sad_eda_2026/
     ├── plots.py                      # Etap 1 — wykresy EDA i imputacji
     ├── stage2_descriptive/           # Etap 2 — Osoba 2
     │   └── descriptive_analysis.py
-    ├── stage3_correlation/           # Etap 3 — Osoba 3
+    ├── stage3_correlation/           # Etap 3
     │   └── correlation_analysis.py
-    └── stage4_preparation/           # Etap 4 — Osoba 4
+    ├── stage4_anova/                 # Etap 4
+    │   └── anova_analysis.py
+    └── stage5_preparation/           # Etap 5
         └── data_preparation.py
 ```
 
@@ -294,7 +332,8 @@ clean_data()                          # 🧹 Etap 1 [Vitaliy Arkhanhelski]
     └── save_clean_data()             # → HR_clean.csv
 run() [descriptive]                   # 📈 Etap 2
 run() [correlation]                   # 🔗 Etap 3
-run() [preparation]                   # ⚙️ Etap 4
+run() [anova]                         # 📐 Etap 4
+run() [preparation]                   # ⚙️ Etap 5
 ```
 
 ## 🚀 Uruchomienie
