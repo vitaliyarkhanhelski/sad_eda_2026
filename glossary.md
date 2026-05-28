@@ -9,23 +9,23 @@ Braki są **całkowicie losowe** — niezależne od jakichkolwiek innych zmienny
 
 **Konsekwencja:** można bezpiecznie imputować globalną medianą/średnią lub usunąć wiersze bez wprowadzania błędu systematycznego.
 
+> ✅ `Age` i `MonthlyIncome` w HR.csv → **MCAR** (potwierdzone testami Mann-Whitney U i Chi-kwadrat — brak istotnej zależności między brakami a innymi zmiennymi)
+
 ---
 
 ### MAR — Missing At Random
 Braki **zależą od innych zmiennych** w datasecie (obserwowalnych), ale nie od samej brakującej wartości.
 
-**Przykład w naszym datasecie:** braki w `Age` częściej występują na `JobLevel 3` niż na `JobLevel 1`. Znając `JobLevel`, można przewidzieć prawdopodobieństwo braku.
+**Przykład ogólny:** kobiety częściej niż mężczyźni pomijają pytanie o wiek w ankiecie. Brak w kolumnie `Age` zależy od kolumny `Gender` — którą znamy. Znając płeć, można przewidzieć prawdopodobieństwo braku.
 
-**Konsekwencja:** należy imputować **grupowo** — np. medianą wg `JobLevel + JobRole`. Globalna mediana byłaby błędem systematycznym.
-
-> ✅ `Age` i `MonthlyIncome` w HR.csv → **MCAR** (potwierdzone testami Mann-Whitney U i Chi-kwadrat — brak istotnej zależności między brakami a innymi zmiennymi)
+**Konsekwencja:** należy imputować **grupowo** — np. medianą wg grupy wiekowej lub KNN (który naturalnie uwzględnia podobieństwo do sąsiadów). Globalna mediana byłaby błędem systematycznym.
 
 ---
 
 ### MNAR — Missing Not At Random
 Braki **zależą od samej brakującej wartości** — dane "celowo" znikają z powodu swojej wartości.
 
-**Przykład:** pracownicy z bardzo niskim wynagrodzeniem nie podają `MonthlyIncome` bo się wstydzą. Albo bardzo starzy pracownicy nie podają `Age`.
+**Przykład:** pracownicy z bardzo **niską** pensją nie podają `MonthlyIncome` bo się wstydzą — brak zależy od samej brakującej wartości (niska pensja powoduje brak pensji). Nie możesz tego wykryć z innych kolumn, bo informacja jest ukryta w samym braku.
 
 **Konsekwencja:** najtrudniejszy przypadek — żadna prosta imputacja nie jest w pełni poprawna. Wymaga modelowania mechanizmu braków.
 
