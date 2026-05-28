@@ -72,7 +72,7 @@ Modele uczenia maszynowego można wdrożyć w celu przewidywania potencjalnych p
 
 **Vitaliy Arkhanhelski**
 
-Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u analizy danych.
+Projekt zrealizowany samodzielnie — obejmuje wszystkie 5 etapów pipeline'u analizy danych.
 
 ---
 
@@ -83,11 +83,11 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 **Eksploracja (`dataset_analysis`):**
 - Wizualizacje wzorców braków: matrix, heatmapa, dendrogram (`missingno`)
 - Statystyki opisowe datasetu (`skimpy`)
-- Analiza mechanizmu braków: testy Mann-Whitney U i Chi-kwadrat → **MCAR**
+- Analiza mechanizmu braków: testy Mann-Whitney U i Chi-kwadrat → **MCAR** (braki losowe, niezależne od pozostałych zmiennych — imputacja nie wprowadza systematycznego błędu)
 
-| Macierz braków | Heatmapa braków | Dendrogram |
-|---|---|---|
-| ![msno matrix](charts/msno/msno_matrix.png) | ![msno heatmap](charts/msno/msno_heatmap.png) | ![msno dendrogram](charts/msno/msno_dendrogram.png) |
+| Macierz braków | Heatmapa braków | Dendrogram | Heatmapa korelacji braków |
+|---|---|---|---|
+| ![msno matrix](charts/msno/msno_matrix.png) | ![msno heatmap](charts/msno/msno_heatmap.png) | ![msno dendrogram](charts/msno/msno_dendrogram.png) | ![missing heatmap](charts/msno/missing_heatmap.png) |
 
 **Czyszczenie (`clean_data`):**
 - Usunięcie duplikatów
@@ -116,11 +116,11 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 ![outliers boxplots](charts/outliers_boxplots.png)
 
 **Artefakty w `data/stage1_preprocessing/`:**
-- `age_imputed_rows.csv` — 100 wierszy z wartościami wstawionymi przez KNN
-- `monthlyincome_imputed_rows.csv` — 150 wierszy z wartościami wstawionymi przez KNN
-- `age_imputation_stats.csv` — mean/std/median przed i po imputacji
-- `monthlyincome_imputation_stats.csv` — mean/std/median przed i po imputacji
-- `outliers_summary.csv` — tabela IQR dla wszystkich kolumn numerycznych
+- [`age_imputed_rows.csv`](data/stage1_preprocessing/age_imputed_rows.csv) — 100 wierszy z wartościami wstawionymi przez KNN
+- [`monthlyincome_imputed_rows.csv`](data/stage1_preprocessing/monthlyincome_imputed_rows.csv) — 150 wierszy z wartościami wstawionymi przez KNN
+- [`age_imputation_stats.csv`](data/stage1_preprocessing/age_imputation_stats.csv) — mean/std/median przed i po imputacji
+- [`monthlyincome_imputation_stats.csv`](data/stage1_preprocessing/monthlyincome_imputation_stats.csv) — mean/std/median przed i po imputacji
+- [`outliers_summary.csv`](data/stage1_preprocessing/outliers_summary.csv) — tabela IQR dla wszystkich kolumn numerycznych
 
 📥 **Wejście:** surowy `df` z `data_loader.load_data()`  
 📤 **Wyjście:** oczyszczony `DataFrame` przekazywany dalej
@@ -156,8 +156,8 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 ![violins](charts/stage2_descriptive/violinplots_by_attrition.png)
 
 **Artefakty w `data/stage2_descriptive/`:**
-- `descriptive_stats.csv` — statystyki opisowe wszystkich zmiennych numerycznych (mean, std, skewness, kurtosis, CV)
-- `statistical_tests.csv` — p-value dla każdej zmiennej vs Attrition (Mann-Whitney U + Chi-kwadrat)
+- [`descriptive_stats.csv`](data/stage2_descriptive/descriptive_stats.csv) — statystyki opisowe wszystkich zmiennych numerycznych (mean, std, skewness, kurtosis, CV)
+- [`statistical_tests.csv`](data/stage2_descriptive/statistical_tests.csv) — p-value dla każdej zmiennej vs Attrition (Mann-Whitney U + Chi-kwadrat)
 
 📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
 📤 **Wyjście:** wykresy + podsumowanie wyników testów
@@ -192,7 +192,7 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 ![parallel coordinates](charts/stage3_correlation/parallel_coordinates.png)
 
 **Artefakty w `data/stage3_correlation/`:**
-- `top_correlations.csv` — top 10 zmiennych numerycznych najsilniej skorelowanych z Attrition (Spearman)
+- [`top_correlations.csv`](data/stage3_correlation/top_correlations.csv) — top 10 zmiennych numerycznych najsilniej skorelowanych z Attrition (Spearman)
 
 📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
 📤 **Wyjście:** wykresy PNG + CSV z top korelacjami
