@@ -6,7 +6,7 @@
 
 ## 📌 Opis projektu
 
-Eksploracyjna analiza danych (EDA) zbioru IBM HR Analytics dotyczącego rotacji pracowników (*attrition*). Celem projektu jest identyfikacja czynników wpływających na odejście pracowników z firmy oraz przygotowanie danych do przyszłego modelowania klasyfikacyjnego.
+Eksploracyjna analiza danych (EDA) zbioru [IBM HR Analytics dotyczącego rotacji pracowników (*attrition*)](https://github.com/kflisikowsky/analiza_danych_projekt_zespolowy/tree/main/HR). Celem projektu jest identyfikacja czynników wpływających na odejście pracowników z firmy oraz przygotowanie danych do przyszłego modelowania klasyfikacyjnego.
 
 ### 📋 Treść zadania (wg prowadzącego)
 
