@@ -237,17 +237,37 @@ Projekt zrealizowany samodzielnie — obejmuje wszystkie 4 etapy pipeline'u anal
 **Zadania:**
 - Encoding zmiennych kategorycznych:
   - Binary: `Attrition` (Yes=1/No=0), `Gender`, `OverTime`
-  - Ordinal: `BusinessTravel` (Non-Travel=0, Rarely=1, Frequently=2)
+  - Ordinal: `BusinessTravel` (Non-Travel=0, Travel_Rarely=1, Travel_Frequently=2)
   - One-Hot: `Department`, `EducationField`, `JobRole`, `MaritalStatus`
-- Skalowanie zmiennych numerycznych:
-  - Standaryzacja Z-score (`StandardScaler`)
-  - Normalizacja Min-Max (`MinMaxScaler`)
-  - Porównanie rozkładów przed i po skalowaniu (wykresy)
-- Krótkie podsumowanie: które zmienne warto uwzględnić w modelu
-- Zapis finalnych datasetów → `HR_model_standardized.csv`, `HR_model_normalized.csv`
+- Skalowanie 24 kolumn (ciągłe numeryczne + `BusinessTravel` ordinal; binarne 0/1 i one-hot 0/1 pozostają bez zmian):
+  - Standaryzacja Z-score (`StandardScaler`) — mean=0, std=1
+  - Normalizacja Min-Max (`MinMaxScaler`) — zakres [0, 1]
+- Wizualizacja rozkładów przed i po skalowaniu (top 4 kolumny)
+- Zapis finalnych datasetów (1320 wierszy × 48 kolumn)
+
+**Wykres:**
+
+![Scaling comparison](charts/stage5_preparation/scaling_comparison.png)
+
+> Wykres potwierdza że kształt rozkładu nie zmienia się po skalowaniu — zmienia się tylko skala osi X. `MonthlyIncome` i `YearsAtCompany` mają widoczny ogon prawostronny (outliery), który StandardScaler zachowuje, a MinMaxScaler "ściska" ku lewej.
 
 📥 **Wejście:** [`HR_clean.csv`](data/HR_clean.csv) / oczyszczony `df`  
-📤 **Wyjście:** dwa pliki CSV gotowe do modelowania (`HR_model_standardized.csv`, `HR_model_normalized.csv`)
+📤 **Wyjście:** [`HR_model_standardized.csv`](data/HR_model_standardized.csv), [`HR_model_normalized.csv`](data/HR_model_normalized.csv)
+
+**Pipeline EDA zakończony.** Oba pliki są gotowe do bezpośredniego użycia w trenowaniu modelu klasyfikacyjnego (np. Random Forest, regresja logistyczna, XGBoost).
+
+## 🗂️ Pliki danych
+
+| Plik | Wiersze | Kolumny | Do czego |
+|---|---|---|---|
+| [`HR.csv`](data/HR.csv) | 1470 | 35 | Surowy dataset — punkt wyjścia, nie modyfikowany |
+| [`HR_clean.csv`](data/HR_clean.csv) | 1470 | 31 | Po czyszczeniu (Etap 1): usunięte stałe kolumny, imputacja Age i MonthlyIncome. Zawiera 150 wierszy z `Attrition=NaN` |
+| [`HR_model_standardized.csv`](data/HR_model_standardized.csv) | 1320 | 48 | Gotowy do modelowania — encoding + standaryzacja Z-score (mean=0, std=1). Tylko wiersze ze znanym Attrition |
+| [`HR_model_normalized.csv`](data/HR_model_normalized.csv) | 1320 | 48 | Gotowy do modelowania — encoding + normalizacja Min-Max ([0,1]). Tylko wiersze ze znanym Attrition |
+
+> **Uwaga:** 150 wierszy z `Attrition=NaN` nie są stracone — istnieją w `HR_clean.csv` i można je zakodować/przeskalować w przyszłości, by użyć modelu do **predykcji** (nie trenowania).
+
+---
 
 ## 📁 Struktura projektu
 
@@ -261,8 +281,8 @@ sad_eda_2026/
 ├── data/
 │   ├── HR.csv                        # Surowy dataset
 │   ├── HR_clean.csv                  # Generowany przez Etap 1 → data/HR_clean.csv
-│   ├── HR_model_standardized.csv     # Generowany przez Etap 4
-│   ├── HR_model_normalized.csv       # Generowany przez Etap 4
+│   ├── HR_model_standardized.csv     # Generowany przez Etap 5
+│   ├── HR_model_normalized.csv       # Generowany przez Etap 5
 │   ├── stage1_preprocessing/         # Artefakty Etapu 1
 │   │   ├── age_imputed_rows.csv
 │   │   ├── age_imputation_stats.csv
@@ -274,9 +294,10 @@ sad_eda_2026/
 │   │   └── statistical_tests.csv
 │   ├── stage3_correlation/           # Artefakty Etapu 3
 │   │   └── top_correlations.csv
-│   └── stage4_anova/                 # Artefakty Etapu 4
-│       ├── anova_results.csv
-│       └── ancova_results.csv
+│   ├── stage4_anova/                 # Artefakty Etapu 4
+│   │   ├── anova_results.csv
+│   │   └── ancova_results.csv
+│   └── stage5_preparation/           # Artefakty Etapu 5 (pusty — dane w data/)
 ├── charts/
 │   ├── msno/                         # Wykresy braków (missingno)
 │   ├── age/                          # Analiza imputacji Age
@@ -298,6 +319,7 @@ sad_eda_2026/
 │   ├── stage4_anova/                 # Wykresy Etap 4
 │   │   └── anova_boxplots.png
 │   └── stage5_preparation/           # Wykresy Etap 5
+│       └── scaling_comparison.png
 ├── reports/
 │   └── HR_profiling_report.html      # Automatyczny raport (ydata_profiling)
 └── src/

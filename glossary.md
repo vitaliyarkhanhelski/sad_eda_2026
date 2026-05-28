@@ -204,3 +204,52 @@ mean = (x₁ + x₂ + ... + xₙ) / n
 
 ⚠️ Wrażliwa na outliery — przy skośnych rozkładach (jak `MonthlyIncome`) mediana jest lepszą miarą centrum.
 
+---
+
+### Standaryzacja (Z-score, StandardScaler)
+Przekształcenie wartości tak, żeby kolumna miała **średnią = 0** i **odchylenie std = 1**.
+
+```
+z = (x - mean) / std
+```
+
+Przykład dla `MonthlyIncome` (mean=6500, std=4700):
+- pensja 6500 → `(6500 - 6500) / 4700 = 0.0`  (dokładnie na średniej)
+- pensja 15000 → `(15000 - 6500) / 4700 = 1.81` (prawie 2 std powyżej średniej)
+- pensja 1000 → `(1000 - 6500) / 4700 = -1.17`  (poniżej średniej)
+
+Zakres wyników: zazwyczaj [-3, 3], ale outlier może dać np. -5 lub +6.  
+Dobry dla: regresji logistycznej, SVM, sieci neuronowych.  
+W projekcie: `HR_model_standardized.csv`
+
+---
+
+### Normalizacja (Min-Max, MinMaxScaler)
+Przekształcenie wartości do zakresu **[0, 1]** — minimum staje się 0, maksimum staje się 1.
+
+```
+x_norm = (x - min) / (max - min)
+```
+
+Przykład dla `MonthlyIncome` (min=1009, max=19999):
+- pensja 1009 → `0.0`
+- pensja 19999 → `1.0`
+- pensja 6500 → `(6500 - 1009) / (19999 - 1009) ≈ 0.29`
+
+⚠️ Wrażliwa na outliery — jeden ekstremalny punkt "ściska" wszystkie inne wartości ku środkowi zakresu.  
+Dobra dla: k-NN, sieci neuronowych z aktywacją sigmoid/tanh.  
+W projekcie: `HR_model_normalized.csv`
+
+---
+
+### Standaryzacja vs Normalizacja
+
+| | Standaryzacja (Z-score) | Normalizacja (Min-Max) |
+|---|---|---|
+| Zakres wyników | ~[-3, 3], bez twardych granic | dokładnie [0, 1] |
+| Wrażliwość na outliery | niska | wysoka |
+| Zachowuje kształt rozkładu | tak | tak |
+| Kiedy używać | regresja logistyczna, SVM | k-NN, sieci neuronowe |
+| Modele drzewiaste (RF, XGBoost) | niepotrzebne | niepotrzebne |
+
+

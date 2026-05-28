@@ -13,6 +13,7 @@ DATA_STAGE1_DIR = DATA_DIR / "stage1_preprocessing"
 DATA_STAGE2_DIR = DATA_DIR / "stage2_descriptive"
 DATA_STAGE3_DIR = DATA_DIR / "stage3_correlation"
 DATA_STAGE4_DIR = DATA_DIR / "stage4_anova"
+DATA_STAGE5_DIR = DATA_DIR / "stage5_preparation"
 REPORTS_DIR = PROJECT_ROOT / "reports"
 CHARTS_DIR = PROJECT_ROOT / "charts"
 CHARTS_MSNO_DIR = CHARTS_DIR / "msno"
@@ -22,6 +23,7 @@ CHARTS_KNN_DIR = CHARTS_DIR / "knn"
 CHARTS_STAGE2_DIR = CHARTS_DIR / "stage2_descriptive"
 CHARTS_STAGE3_DIR = CHARTS_DIR / "stage3_correlation"
 CHARTS_STAGE4_DIR = CHARTS_DIR / "stage4_anova"
+CHARTS_STAGE5_DIR = CHARTS_DIR / "stage5_preparation"
 DATASET_FILENAME = "HR.csv"
 REPORT_FILENAME = "HR_profiling_report.html"
 
@@ -29,3 +31,15 @@ CONSTANT_COLS = ["EmployeeCount", "Over18", "StandardHours"]  # truly constant (
 COLS_TO_DROP = CONSTANT_COLS + ["EmployeeNumber"]              # all useless columns to remove
 CONTINUOUS_COLS_FOR_OUTLIERS = ["MonthlyIncome", "TotalWorkingYears", "YearsAtCompany",
                                 "YearsSinceLastPromotion", "NumCompaniesWorked"]
+
+# Stage 5 — encoding config
+BINARY_COLS = {
+    'Attrition': {'Yes': 1, 'No': 0},
+    'Gender':    {'Male': 1, 'Female': 0},
+    'OverTime':  {'Yes': 1, 'No': 0},
+}
+ORDINAL_COLS = {
+    'BusinessTravel': {'Non-Travel': 0, 'Travel_Rarely': 1, 'Travel_Frequently': 2},
+}
+ONEHOT_COLS = ['Department', 'EducationField', 'JobRole', 'MaritalStatus']
+SCALE_PREVIEW_COLS = ['MonthlyIncome', 'Age', 'TotalWorkingYears', 'YearsAtCompany']
